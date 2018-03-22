@@ -40,6 +40,7 @@ def usage():
     print "     -h (Help)"
     print "     ls (Lists all of the available DNS Routes)"
     print "     route <domain> (Prints the DNS route for the given domain)"
+    print "     graph (Prints a full graph of all sniffed DNS records)"
 
 
 def ls():
@@ -57,8 +58,19 @@ def print_route(domain):
     for stop in route:
         sys.stdout.write(stop + " --> ")
     sys.stdout.write(domain + '\n')
+    sys.stdout.write('\t')
+    sys.stdout.write('Details:' +'\n')
+    sys.stdout.write('\t\tHostname: ' + domain + '\n')
+    sys.stdout.write('\t\tHops: ' + str(len(route)))
     sys.stdout.flush()
 
+
+def print_graph():
+    print "DNS GRAPH\n"
+    for domain in routes:
+        print_route(domain)
+        print '\n'
+        print "\t------------\n"
 
 if __name__ == '__main__':
     thread = Thread(target=run_sniff)
@@ -72,6 +84,8 @@ if __name__ == '__main__':
             usage()
         elif action == "ls":
             ls()
+        elif action == "graph":
+            print_graph()
         elif action.startswith("route"):
             argv = action.split(" ")
             if len(argv) != 2:
